@@ -14,17 +14,20 @@ const config = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
+    static: path.resolve(__dirname, 'dist'),
     open: true,
     host: "localhost",
-    hot: "true",
+    hot: true,
   },
   plugins: [
+    new CleanWebpackPlugin(),
+
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './src/template.html'),
+      template: path.resolve(__dirname, "./src/template.html"),
       title: "Phaser Project",
+      favicon: path.resolve(__dirname, "./public/favicon.png")
     }),
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
   ],
   module: {
@@ -51,7 +54,14 @@ const config = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts"],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    extensions: ['.js', '.jsx', '.json'],
+    descriptionFiles: ['package.json'],
+    mainFiles: ['index'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      assets: path.resolve(__dirname, 'public'),
+    },
   },
 };
 
@@ -60,6 +70,7 @@ module.exports = () => {
     config.mode = "production";
   } else {
     config.mode = "development";
+    config.devtool = 'inline-source-map';
   }
   return config;
 };
